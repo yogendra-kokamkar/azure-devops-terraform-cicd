@@ -1,0 +1,59 @@
+trigger:
+ paths:
+   include:
+     - terraform/*.tf
+
+pool:
+  name: 'Default'
+
+stages:
+  - stage: Plan
+    displayName: 'Terraform Plan'
+    jobs:
+      - job: Plan
+        displayName: 'Terraform Plan'
+        steps:
+          - script: |
+              cd terraform
+              terraform init
+            displayName: 'Terraform Init'
+
+          - script: |
+              cd terraform
+              terraform plan -out=tfplan
+            displayName: 'Terraform Plan'
+  
+  - stage: Approval
+    displayName: 'Manual Approval'
+    dependsOn: Plan
+    condition: succeeded()
+    jobs:
+    - deployment: Approval
+      displayName: 'Manual Approval'
+      pool: server
+      environment: 'production'
+      strategy:
+        runOnce:
+          deploy:
+            steps:
+            - task: ManualValidation@0
+              inputs:
+                notifyUsers: 'example@email.com'
+                instructions: 'Please review the Terraform plan and approve or reject the changes.'
+
+  - stage: Apply
+    displayName: 'Terraform Apply'
+    jobs:
+      - job: Apply
+        displayName: 'Terraform Apply'
+        steps:
+          - script: |
+              cd terraform
+              terraform init
+            displayName: 'Terraform Init'
+
+          - script: |
+              cd terraform
+              terraform apply --auto-approve
+            displayName: 'Terraform Apply'
+            
