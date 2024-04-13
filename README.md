@@ -1,6 +1,9 @@
 # CICD Pipeline with Terraform on Azure DevOps
+![azure-devops-terraform-diagram-2](https://github.com/yogendra-kokamkar/azure-devops-terraform-cicd/assets/55878086/787f97ed-1893-4f33-a6d7-ff4ab637836c)
 
 This project demonstrates the implementation of a Continuous Integration and Continuous Deployment (CICD) pipeline using Azure DevOps. The pipeline automates the deployment of infrastructure on Azure Cloud using Terraform, with additional features such as email approval for Terraform plan execution.
+
+
 
 ## Overview
 
